@@ -33,6 +33,7 @@ submitMessageButton.addEventListener("click", (e) => {
     currentDayOfMonth + "-" + (currentMonth + 1) + "-" + currentYear;
 
   push(notesInDB, { message, dateString });
+  document.getElementById("text-input").value = ""
 });
 
 onValue(notesInDB, function (snapshot) {
@@ -42,7 +43,8 @@ onValue(notesInDB, function (snapshot) {
 
     clearNotesList();
 
-    for (let i = 0; i < itemsArray.length; i++) {
+    for (let i = itemsArray.length -1; i >= 0; i--) {
+      console.log("here");
       let currentObject = itemsArray[i];
       appendNotesToList(currentObject);
     }
@@ -65,8 +67,8 @@ function appendNotesToList(item) {
   let newEl = document.createElement("li");
 
   newEl.textContent = itemValue;
-  let dateEl = document.createElement("li")
-    
+  let dateEl = document.createElement("li");
+
   dateEl.textContent = timeStamp;
   dateEl.classList.add("date");
 

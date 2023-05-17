@@ -30,7 +30,7 @@ label {
 }
 
 select {
-    color: ##282A2A;
+    color: #282A2A;
     background-color: #DCE1EB;
     border: 0;
     padding: 15px;
@@ -91,7 +91,7 @@ ul li:hover {
     align-items: center;
     padding: 10px;
     width: 100%;
-    gap: 50px
+
 }
 
 .btn {
@@ -103,6 +103,18 @@ ul li:hover {
 
 }
 
+.footer>a {
+    text-decoration: none;
+    color: #DCE1EB;
+    border-right: 1px solid #DCE1EB;
+    flex-grow: 1;
+    margin: 0;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+}
+
+
 .notes-title {
     text-align: center;
     font-size: 3rem;
@@ -113,6 +125,10 @@ ul li:hover {
     line-height: 2.5rem;
     text-transform: uppercase;
 
+}
+
+#notes-list {
+    white-space: pre-wrap;
 }
 
 .message-label {
@@ -127,7 +143,7 @@ ul li:hover {
 
 .date {
     font-size: 20px;
-    background-color: #EEF0F4;
+    background-color: rgba(0, 0, 0, 0);
     padding: 15px;
     border-radius: 8px;
     box-shadow: none;
