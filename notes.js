@@ -70,11 +70,11 @@ function appendNotesToList(item) {
   dateEl.textContent = timeStamp;
   dateEl.classList.add("date");
 
-  newEl.addEventListener("click", function () {
-    console.log("here clicked");
-    let exactLocationOfItemInDB = ref(database, `notes/${itemID}`);
-    remove(exactLocationOfItemInDB);
-  });
+  // newEl.addEventListener("click", function () {
+  //   console.log("here clicked");
+  //   let exactLocationOfItemInDB = ref(database, `notes/${itemID}`);
+  //   remove(exactLocationOfItemInDB);
+  // });
 
   // @ts-ignore
   notesList.append(newEl, dateEl);
