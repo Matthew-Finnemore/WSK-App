@@ -1,20 +1,27 @@
 // @ts-ignore
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+
+import { initializeApp } from "firebase/app";
 import {
   getDatabase,
   ref,
   push,
   onValue,
-  remove,
-  // @ts-ignore
+  remove,  // @ts-ignore
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
-const appSettings = {
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCcUX3YW2P11tJOmEkfj3nzipyNthpJ3qM",
+  authDomain: "wsk-bread-folds.firebaseapp.com",
   databaseURL:
-    "https://wsk-bread-folds-default-rtdb.europe-west1.firebasedatabase.app/",
+    "https://wsk-bread-folds-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "wsk-bread-folds",
+  storageBucket: "wsk-bread-folds.appspot.com",
+  messagingSenderId: "450091720419",
+  appId: "1:450091720419:web:0399d8c015c94791682fd6",
 };
 
-const app = initializeApp(appSettings);
+const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const timesInDB = ref(database, "times");
 
@@ -110,4 +117,15 @@ function appendTimerToList(item) {
     }
     newEl.textContent = itemValue + " - " + formattedTime;
   }, 100);
+}
+
+// new firebase stuff
+
+function requestPermission() {
+  console.log('Requesting permission...');
+  Notification.requestPermission().then((permission) => {
+    if (permission === 'granted') {
+      console.log('Notification permission granted.');
+    };
+  };
 }
