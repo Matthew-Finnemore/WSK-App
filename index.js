@@ -111,3 +111,4 @@ function appendTimerToList(item) {
     newEl.textContent = itemValue + " - " + formattedTime;
   }, 100);
 }
+//looking to add firebase notifications here
