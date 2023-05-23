@@ -11,12 +11,21 @@ import {
 
 const appSettings = {
   databaseURL:
-    "https://wsk-bread-folds-default-rtdb.europe-west1.firebasedatabase.app/",
+    "https://wsk-bread-folds-default-rtdb.europe-west1.firebasedatabase.app",
 };
 
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
 const timesInDB = ref(database, "times");
+
+(function requestPermission() {
+  console.log("Requesting permission...");
+  Notification.requestPermission().then((permission) => {
+    if (permission === "granted") {
+      console.log("Notification permission granted.");
+    }
+  });
+})();
 
 const breadInputFeild = document.getElementById("input-field");
 const timeInputFeild = document.getElementById("fold-times");
@@ -28,34 +37,29 @@ let mySound = new Audio("assets/bell-ring.wav");
 addButtonEl.addEventListener("click", function () {
   // @ts-ignore
   let breadNameValue = breadInputFeild.value;
+  // @ts-ignore
   let timeValue = timeInputFeild.value;
-  let currentTime = Date.now();
   let finishTime = Date.now() + timeValue * 60000;
-
-  console.log(timeValue);
-
-  push(timesInDB, { breadNameValue, timeValue, currentTime, finishTime });
-
+  push(timesInDB, { breadNameValue, timeValue, finishTime });
   revertInputFeild();
 });
 
-// onValue(timesInDB, function (snapshot) {
-//   clearTimersList();
-//   if (snapshot.exists()) {
-//     let itemsArray = Object.entries(snapshot.val());
+onValue(timesInDB, function (snapshot) {
+  clearTimersList();
+  if (snapshot.exists()) {
+    let itemsArray = Object.entries(snapshot.val());
 
-//     clearTimersList();
+    clearTimersList();
 
-//     for (let i = 0; i < itemsArray.length; i++) {
-//       let currentObject = itemsArray[i];
-//         appendTimerToList(currentObject);
-
-//     }
-//   } else {
-//     // @ts-ignore
-//     timerList;
-//   }
-// });
+    for (let i = 0; i < itemsArray.length; i++) {
+      let currentObject = itemsArray[i];
+      appendTimerToList(currentObject);
+    }
+  } else {
+    // @ts-ignore
+    timerList;
+  }
+});
 
 function clearTimersList() {
   // @ts-ignore
@@ -69,27 +73,18 @@ function revertInputFeild() {
 function formatTime(millis) {
   if (millis > 0) {
     var minutes = Math.floor(millis / 60000);
-    var seconds = ((millis % 60000) / 1000).toFixed(0);
-    return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+    var seconds = Number(((millis % 60000) / 1000).toFixed(0));
+    return (
+      (minutes < 10 ? "0" : "") +
+      minutes +
+      ":" +
+      (seconds < 10 ? "0" : "") +
+      seconds
+    );
   } else {
     return "00:00";
   }
 }
-setInterval(() => {
-  clearTimersList();
-  onValue(timesInDB, function (snapshot) {
-    if (snapshot.exists()) {
-      let itemsArray = Object.entries(snapshot.val());
-
-      clearTimersList();
-
-      for (let i = 0; i < itemsArray.length; i++) {
-        let currentObject = itemsArray[i];
-        appendTimerToList(currentObject);
-      }
-    }
-  });
-}, 100);
 
 function appendTimerToList(item) {
   let itemID = item[0];
@@ -99,20 +94,29 @@ function appendTimerToList(item) {
   let timeLeft = itemFinishTime - currentTime;
   let formattedTime = formatTime(timeLeft);
   let newEl = document.createElement("li");
-  if (timeLeft < 0) {
-    newEl.style.backgroundColor = "red";
-    mySound.play();
-  }
 
   newEl.textContent = itemValue + " - " + formattedTime;
 
   newEl.addEventListener("click", function () {
+    mySound.pause();
+    clearInterval(updateInterval);
+    console.log("clicked");
     let exactLocationOfItemInDB = ref(database, `times/${itemID}`);
-    console.log(exactLocationOfItemInDB);
-
     remove(exactLocationOfItemInDB);
   });
 
   // @ts-ignore
   timerList.append(newEl);
+  const updateInterval = setInterval(() => {
+    let currentTime = Date.now();
+    let timeLeft = itemFinishTime - currentTime;
+    let formattedTime = formatTime(timeLeft);
+    if (timeLeft < 0) {
+      newEl.style.backgroundColor = "#D0342C ";
+      newEl.style.color = "white";
+      console.log("pla");
+      mySound.play();
+    }
+    newEl.textContent = itemValue + " - " + formattedTime;
+  }, 100);
 }
