@@ -5,19 +5,20 @@ const resultDisplay = document.getElementById("result-temp");
 const currentTempEl = document.getElementById("current-temp");
 const maxTempEl = document.getElementById("max-temp");
 const baseTemp = 68;
-const apiKey = "3ed3b16730dc48c789281817232305 ";
-let currentTemp = 0
-let maxTemp = 0
+const apiKey = "61fe5a07dcecfd73943bd78de8fdeaff";
+let currentTemp = 0;
+let maxTemp = 0;
+const lon = 52.284928506462876;
+const lat = -1.5791504656251625;
 
-const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey} &q=cv344nt&days=1&aqi=no&alerts=no`;
-
+const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lon}&lon=${lat}&appid=${apiKey}&units=metric`;
 
 fetch(url)
   .then((response) => response.json())
   .then((data) => {
     console.log(data);
-    currentTemp = data.current.temp_c;
-    maxTemp = data.forecast.forecastday[0].day.maxtemp_c;
+    currentTemp = Math.round(data.main.temp);
+    maxTemp = Math.round(data.main.temp_max);
     setTemperatures(currentTemp, maxTemp);
   });
 
@@ -36,10 +37,9 @@ function calculateTemp() {
     resultDisplay.textContent = "Input Temps";
   }
 }
-function setTemperatures(currentTemp, maxTemp) { 
+function setTemperatures(currentTemp, maxTemp) {
   if (currentTemp && maxTemp) {
     currentTempEl.textContent = currentTemp;
     maxTempEl.textContent = maxTemp;
   }
-  
 }
