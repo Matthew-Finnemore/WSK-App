@@ -23,30 +23,34 @@
     <div class="container">
       <img src="assets/wsk-logo-png.png" />
       <h1 class="name">Bread Assistant</h1>
-      <h2 class="title fold-title">Fold Timers</h2>
-       <label for="input-field">Name of Bread</label>
-      <select name="bread-name" id="input-field">
-        <option value="House" selected>House</option>
-        <option value="Seeded">Seeded</option>
-        <option value="Baguette">Baguette</option>
-        <option value="Ciabatta">Ciabatta</option>
-      </select>
-      <label for="fold-times">Time Between Folds</label>
-      <select name="bread-name" id="fold-times">
-        <option value="30" selected>30 Mins</option>
-        <option value="20">20 Mins</option>
-        <option value="0.1">10 Mins</option>
-        <option value="40">40 Mins</option>
-      </select>
-      <button id="add-time-button">Add Timer</button>
-      <ul id="timers-list"></ul>
+      <h2 class="water-temp-title title">Water Temp Calc</h2>
+
+      <label for="room-temp">Enter room temperature</label>
+      <input type="number" id="room-temp" />
+      <label for="flour-temp">Enter flour temperature</label>
+      <input type="number" id="flour-temp" />
+      <button id="calc-temp" class="">Calculate Temperature</button>
+      <div class="result-container">
+        Water Temperature:
+        <div class="result"><span id="result-temp"></span>&deg;C</div>
+      </div>
     </div>
+
+    <section class="temperatures">
+      <div class="temps">
+        Current Outside Temp:
+        <span class="api-temp" id="current-temp">0</span>&deg;C
+      </div>
+      <div class="temps">
+        Maximum Outside Temp:
+        <span class="api-temp" id="max-temp">0</span>&deg;C
+      </div>
+    </section>
     <footer class="footer">
       <a href="/notes.html" class="footer-link">Notes</a>
       <a href="/index.html" class="footer-link">Timers</a>
       <a href="/water-temp.html" class="footer-link">Water Temp</a>
     </footer>
-    <script src="index.js" type="module"></script>
-        <script src="firebase-messaging-sw.js" type="module"></script>
+    <script src="water-temp.js" type="module"></script>
   </body>
 </html>
