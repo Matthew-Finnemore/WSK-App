@@ -11,12 +11,21 @@ import {
 
 const appSettings = {
   databaseURL:
-    "https://wsk-bread-folds-default-rtdb.europe-west1.firebasedatabase.app/",
+    "https://wsk-bread-folds-default-rtdb.europe-west1.firebasedatabase.app",
 };
 
 const app = initializeApp(appSettings);
 const database = getDatabase(app);
 const timesInDB = ref(database, "times");
+
+(function requestPermission() {
+  console.log("Requesting permission...");
+  Notification.requestPermission().then((permission) => {
+    if (permission === "granted") {
+      console.log("Notification permission granted.");
+    }
+  });
+})();
 
 const breadInputFeild = document.getElementById("input-field");
 const timeInputFeild = document.getElementById("fold-times");
@@ -28,6 +37,7 @@ let mySound = new Audio("assets/bell-ring.wav");
 addButtonEl.addEventListener("click", function () {
   // @ts-ignore
   let breadNameValue = breadInputFeild.value;
+  // @ts-ignore
   let timeValue = timeInputFeild.value;
   let finishTime = Date.now() + timeValue * 60000;
   push(timesInDB, { breadNameValue, timeValue, finishTime });
@@ -84,31 +94,29 @@ function appendTimerToList(item) {
   let timeLeft = itemFinishTime - currentTime;
   let formattedTime = formatTime(timeLeft);
   let newEl = document.createElement("li");
-  if (timeLeft < 0) {
-    newEl.style.backgroundColor = "#D0342C ";
-    newEl.style.color = "white";
-    mySound.play();
-  }
 
   newEl.textContent = itemValue + " - " + formattedTime;
 
   newEl.addEventListener("click", function () {
+    mySound.pause();
+    clearInterval(updateInterval);
+    console.log("clicked");
     let exactLocationOfItemInDB = ref(database, `times/${itemID}`);
     remove(exactLocationOfItemInDB);
   });
 
   // @ts-ignore
   timerList.append(newEl);
-  setInterval(() => {
+  const updateInterval = setInterval(() => {
     let currentTime = Date.now();
     let timeLeft = itemFinishTime - currentTime;
     let formattedTime = formatTime(timeLeft);
     if (timeLeft < 0) {
       newEl.style.backgroundColor = "#D0342C ";
       newEl.style.color = "white";
+      console.log("pla");
       mySound.play();
     }
     newEl.textContent = itemValue + " - " + formattedTime;
   }, 100);
 }
-//looking to add firebase notifications here
