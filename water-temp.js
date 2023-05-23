@@ -9,7 +9,7 @@ const apiKey = "3ed3b16730dc48c789281817232305 ";
 let currentTemp = 0
 let maxTemp = 0
 
-const url = `http://api.weatherapi.com/v1/forecast.json?key=${apiKey} &q=cv344nt&days=1&aqi=no&alerts=no`;
+const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey} &q=cv344nt&days=1&aqi=no&alerts=no`;
 
 
 fetch(url)
