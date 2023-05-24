@@ -5,7 +5,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"
     />
-    <title>WSK Bread Assistant</title>
+    <title>WSK Baker Assistant</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,7 +22,8 @@
   <body>
     <div class="container">
       <img src="assets/wsk-logo-png.png" />
-      <h1 class="name">Bread Assistant</h1>
+      <h1 class="name">Baker Assistant</h1>
+      <h2 class="title fold-title">Fold Timers</h2>
        <label for="input-field">Name of Bread</label>
       <select name="bread-name" id="input-field">
         <option value="House" selected>House</option>
@@ -32,10 +33,10 @@
       </select>
       <label for="fold-times">Time Between Folds</label>
       <select name="bread-name" id="fold-times">
+        <option value="40">40 Mins</option>
         <option value="30" selected>30 Mins</option>
         <option value="20">20 Mins</option>
         <option value="0.1">10 Mins</option>
-        <option value="40">40 Mins</option>
       </select>
       <button id="add-time-button">Add Timer</button>
       <ul id="timers-list"></ul>
@@ -43,7 +44,7 @@
     <footer class="footer">
       <a href="/notes.html" class="footer-link">Notes</a>
       <a href="/index.html" class="footer-link">Timers</a>
-      <a href="" class="footer-link">Water Temp</a>
+      <a href="/water-temp.html" class="footer-link">Water Temp</a>
     </footer>
     <script src="index.js" type="module"></script>
         <script src="firebase-messaging-sw.js" type="module"></script>
