@@ -55,7 +55,7 @@ setInterval(() => {
       timerList;
     }
   });
-}, 1000);
+}, 100);
 
 function clearTimersList() {
   // @ts-ignore
@@ -103,35 +103,14 @@ function appendTimerToList(item) {
     let foldCounterDb = 0
     mySound.pause();
     let exactLocationOfItemInDB = ref(database, `times/${itemID}`);
-    get(child(exactLocationOfItemInDB, "foldCounter"))
-      .then(function (snapshot) {
-        if (snapshot.exists()) {
-          if (snapshot.val() >= 4) {
-            remove(exactLocationOfItemInDB);
-            window.location.reload();
-          } else {
-            foldCounterDb = snapshot.val() + 1;
-            update(exactLocationOfItemInDB, { foldCounter: foldCounterDb });
-            return;
-          }
-        
-        
-        } else {
-          console.log("No data available");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    
-
+    updateFoldCounter(foldCounterDb, exactLocationOfItemInDB)
+    updateTimer(exactLocationOfItemInDB);
   });
 
   timerList.append(newEl);
    if (timeLeft < 0) {
      newEl.style.backgroundColor = "#D0342C ";
      newEl.style.color = "white";
-     console.log("pla");
      mySound.play();
    }
 }
@@ -150,3 +129,48 @@ function elementContent(breadName, formattedTimeLeft, foldInterval, foldCounter)
   return `${breadName} will need ${foldStep} in: ${formattedTimeLeft}.`;
 
 }
+
+const updateFoldCounter = (foldCounter, exactLocationOfItemInDB) => { 
+
+get(child(exactLocationOfItemInDB, "foldCounter"))
+  .then(function (snapshot) {
+    if (snapshot.exists()) {
+      if (snapshot.val() >= 4) {
+        remove(exactLocationOfItemInDB);
+        mySound.pause();
+      } else {
+        foldCounter = snapshot.val() + 1;
+        update(exactLocationOfItemInDB, { foldCounter: foldCounter });
+        return;
+      }
+    } else {
+      console.log("No data available");
+    }
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+};
+
+const updateTimer = (exactLocationOfItemInDB) => { 
+  get(exactLocationOfItemInDB)
+  .then(function (snapshot) {
+    if (snapshot.exists()) {
+      if (snapshot.val().foldCounter <= 3) {
+        const currentTime = Date.now();
+        const foldInterval = snapshot.val().timeValue * 60000;
+        const newFinishTime = currentTime + foldInterval;
+        console.log(newFinishTime);
+        update(exactLocationOfItemInDB, { finishTime: newFinishTime });
+      }
+      return
+      
+    } else {
+      console.log("No data available");
+    }
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+};
+;
