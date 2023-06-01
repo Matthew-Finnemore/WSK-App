@@ -8,7 +8,7 @@ import {
   remove,
   update,
   get,
-  child
+  child,
   // @ts-ignore
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
@@ -25,6 +25,7 @@ const timeInputField = document.getElementById("fold-times");
 const addButtonEl = document.getElementById("add-time-button");
 const timerList = document.getElementById("timers-list");
 let mySound = new Audio("assets/bell-ring.wav");
+let timerObjects = {};
 
 // @ts-ignore
 addButtonEl.addEventListener("click", function () {
@@ -38,24 +39,12 @@ addButtonEl.addEventListener("click", function () {
   revertInputField();
 });
 
-setInterval(() => {
-  onValue(timesInDB, function (snapshot) {
-    clearTimersList();
-    if (snapshot.exists()) {
-      let itemsArray = Object.entries(snapshot.val());
-
-      clearTimersList();
-
-      for (let i = 0; i < itemsArray.length; i++) {
-        let currentObject = itemsArray[i];
-        appendTimerToList(currentObject);
-      }
-    } else {
-      // @ts-ignore
-      timerList;
-    }
-  });
-}, 100);
+onValue(timesInDB, function (snapshot) {
+  if (snapshot.exists()) {
+    timerObjects = Object.entries(snapshot.val());
+    return timerObjects;
+  }
+});
 
 function clearTimersList() {
   // @ts-ignore
@@ -64,7 +53,8 @@ function clearTimersList() {
 
 function revertInputField() {
   // @ts-ignore
-  breadInputField.value = "House";
+  breadInputField.value = "";
+  timeInputField.value = "";
 }
 function formatTime(millis) {
   if (millis > 0) {
@@ -100,23 +90,28 @@ function appendTimerToList(item) {
   );
 
   newEl.addEventListener("click", function () {
-    let foldCounterDb = 0
+    let foldCounterDb = 0;
     mySound.pause();
     let exactLocationOfItemInDB = ref(database, `times/${itemID}`);
-    updateFoldCounter(foldCounterDb, exactLocationOfItemInDB)
+    updateFoldCounter(foldCounterDb, exactLocationOfItemInDB);
     updateTimer(exactLocationOfItemInDB);
   });
 
   timerList.append(newEl);
-   if (timeLeft < 0) {
-     newEl.style.backgroundColor = "#D0342C ";
-     newEl.style.color = "white";
-     mySound.play();
-   }
+  if (timeLeft < 0) {
+    newEl.style.backgroundColor = "#D0342C ";
+    newEl.style.color = "white";
+    mySound.play();
+  }
 }
 
-function elementContent(breadName, formattedTimeLeft, foldInterval, foldCounter) {
-  let foldStep = ""
+function elementContent(
+  breadName,
+  formattedTimeLeft,
+  foldInterval,
+  foldCounter
+) {
+  let foldStep = "";
   if (foldCounter === 1) {
     foldStep = "fold 1";
   } else if (foldCounter === 2) {
@@ -127,50 +122,60 @@ function elementContent(breadName, formattedTimeLeft, foldInterval, foldCounter)
     foldStep = "shaping";
   }
   return `${breadName} will need ${foldStep} in: ${formattedTimeLeft}.`;
-
 }
 
-const updateFoldCounter = (foldCounter, exactLocationOfItemInDB) => { 
-
-get(child(exactLocationOfItemInDB, "foldCounter"))
-  .then(function (snapshot) {
-    if (snapshot.exists()) {
-      if (snapshot.val() >= 4) {
-        remove(exactLocationOfItemInDB);
-        mySound.pause();
+const updateFoldCounter = (foldCounter, exactLocationOfItemInDB) => {
+  get(child(exactLocationOfItemInDB, "foldCounter"))
+    .then(function (snapshot) {
+      if (snapshot.exists()) {
+        if (snapshot.val() >= 4) {
+          remove(exactLocationOfItemInDB);
+          get(timesInDB).then((snapshot) => {
+            if (snapshot.exists()) {
+              timerObjects = Object.entries(snapshot.val());
+            } else {
+              timerObjects = {};
+            }
+          });
+          mySound.pause();
+        } else {
+          foldCounter = snapshot.val() + 1;
+          update(exactLocationOfItemInDB, { foldCounter: foldCounter });
+          return;
+        }
       } else {
-        foldCounter = snapshot.val() + 1;
-        update(exactLocationOfItemInDB, { foldCounter: foldCounter });
-        return;
+        console.log("No data available");
       }
-    } else {
-      console.log("No data available");
-    }
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
-const updateTimer = (exactLocationOfItemInDB) => { 
+const updateTimer = (exactLocationOfItemInDB) => {
   get(exactLocationOfItemInDB)
-  .then(function (snapshot) {
-    if (snapshot.exists()) {
-      if (snapshot.val().foldCounter <= 3) {
-        const currentTime = Date.now();
-        const foldInterval = snapshot.val().timeValue * 60000;
-        const newFinishTime = currentTime + foldInterval;
-        console.log(newFinishTime);
-        update(exactLocationOfItemInDB, { finishTime: newFinishTime });
+    .then(function (snapshot) {
+      if (snapshot.exists()) {
+        if (snapshot.val().foldCounter <= 3) {
+          const currentTime = Date.now();
+          const foldInterval = snapshot.val().timeValue * 60000;
+          const newFinishTime = currentTime + foldInterval;
+          update(exactLocationOfItemInDB, { finishTime: newFinishTime });
+        }
+        return;
+      } else {
+        console.log("No data available");
       }
-      return
-      
-    } else {
-      console.log("No data available");
-    }
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
-;
+
+setInterval(() => {
+  clearTimersList();
+  for (let i = 0; i < timerObjects.length; i++) {
+    let currentObject = timerObjects[i];
+    appendTimerToList(currentObject);
+  }
+}, 200);
