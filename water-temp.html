@@ -20,20 +20,37 @@
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-<div class="container">
+    <div class="container">
       <img src="assets/wsk-logo-png.png" />
       <h1 class="name">Baker Assistant</h1>
-      <h2 class="notes-title title">Notes</h2>
-      <label class="message-label" for="text-input" >Enter your note here: </label>
-      <textarea type="textarea" id="text-input" class="text-input"></textarea>
-      <button class ="submit" id="message-button"> Add Note</button>
-       <ul id="notes-list"></ul>
+      <h2 class="water-temp-title title">Water Temp Calc</h2>
+
+      <label for="room-temp">Enter room temperature</label>
+      <input type="number" id="room-temp" />
+      <label for="flour-temp">Enter flour temperature</label>
+      <input type="number" id="flour-temp" />
+      <button id="calc-temp" class="">Calculate Temperature</button>
+      <div class="result-container">
+        Water Temperature:
+        <div class="result"><span id="result-temp"></span>&deg;C</div>
+      </div>
     </div>
+
+    <section class="temperatures">
+      <div class="temps">
+        Current Outside Temp:
+        <span class="api-temp" id="current-temp">0</span>&deg;C
+      </div>
+      <div class="temps">
+        Maximum Outside Temp:
+        <span class="api-temp" id="max-temp">0</span>&deg;C
+      </div>
+    </section>
     <footer class="footer">
       <a href="/notes.html" class="footer-link">Notes</a>
       <a href="/index.html" class="footer-link">Timers</a>
       <a href="/water-temp.html" class="footer-link">Water Temp</a>
     </footer>
-    </body>   <script src="notes.js" type="module"></script>
-
+    <script src="water-temp.js" type="module"></script>
+  </body>
 </html>

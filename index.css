@@ -29,7 +29,8 @@ label {
     margin-top: 20px;
 }
 
-select {
+select,
+input {
     color: #282A2A;
     background-color: #DCE1EB;
     border: 0;
@@ -39,6 +40,16 @@ select {
     text-align: center;
     font-family: 'Rubik', sans-serif;
     margin: 0px 0 10px 0px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }
 
 button {
@@ -76,10 +87,6 @@ ul li {
 
 }
 
-ul li:hover {
-    background-color: #FFECC7;
-    cursor: pointer;
-}
 
 .footer {
     display: flex;
@@ -112,13 +119,14 @@ ul li:hover {
     font-weight: 700;
     font-size: 14px;
     text-align: center;
+    letter-spacing: 3px;
 }
 
 
-.notes-title {
+.title {
     text-align: center;
-    font-size: 3rem;
-    margin: 1rem;
+    font-size: 2rem;
+    margin: .5rem;
     font-weight: 900;
     letter-spacing: .3ch;
     text-decoration: overline;
@@ -153,6 +161,19 @@ ul li:hover {
     margin: -1rem 0 0 0;
 
 }
+.delete{
+display: inline-block;
+background-color: rgba(0, 0, 0, 0);
+box-shadow: none;
+text-align: right;
+font-size: 1rem;
+margin-bottom: -0.6rem;
+margin-right: 5px;
+z-index: 1;
+cursor: pointer;
+padding: 0;
+
+}
 
 
 .text-input {
@@ -166,4 +187,47 @@ ul li:hover {
     border: 1px solid 282A2A;
     overflow-y: none;
     height: 10ch;
+}
+
+.water-temp-title {
+    text-decoration: none;
+    border-top: 3px solid #282A2A;
+    /* padding-top: .5rem; */
+}
+
+#calc-temp {
+    margin-top: 1rem;
+}
+
+.result-container {
+    display: flex;
+    font-size: 1.5rem;
+    font-weight: 700;
+    flex-direction: column;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.result {
+    font-size: 4rem;
+    margin-top: 1rem;
+
+}
+
+#room-temp,
+#flour-temp {
+    font-size: 2rem;
+}
+
+
+.temperatures {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.3rem;
+    line-height: 1.2rem;
+    height: 100%;
+    margin: 0 2rem 5rem 2rem;
+    gap: 1rem auto;
+    border-top: 1px solid #282A2A;
+    padding-top: 2rem;
 }
